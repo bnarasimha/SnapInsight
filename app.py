@@ -26,7 +26,7 @@ def process_image(image):
     return [(img, cap) for img, cap in feed]
 
 # Create Gradio interface
-iface = gr.Interface(
+demo = gr.Interface(
     fn=process_image,
     inputs=gr.Image(sources=["upload", "webcam"], type="pil"),
     outputs=gr.Gallery(label="Image Feed", columns=[2], height="auto"),
@@ -35,4 +35,4 @@ iface = gr.Interface(
 )
 
 # Launch the app
-iface.launch()
+demo.launch(server_name="0.0.0.0", server_port=7860)
