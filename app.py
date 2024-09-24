@@ -5,6 +5,7 @@ from transformers import BlipProcessor, BlipForConditionalGeneration
 import os
 import uuid
 import json
+from user_agents import parse
 
 # Initialize BLIP model
 processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
@@ -64,6 +65,14 @@ def load_initial_gallery():
     except (FileNotFoundError, json.JSONDecodeError):
         return [] 
 
+def get_device_type(request):
+    user_agent = request.headers.get("User-Agent")
+    print(user_agent)
+    if "Mobile" in user_agent or "Android" in user_agent or "iPhone" in user_agent:
+        return "mobile"
+    else:
+        return "laptop"
+    
 css = """
 h1 {
     text-align: center;
@@ -76,9 +85,17 @@ with gr.Blocks(css=css) as demo:
     gr.Markdown("# Image Captioning Feed")
     gr.Markdown("Upload an image to generate a caption and add it to the feed.")
     
+    def set_sources(request: gr.Request):
+        device_type = get_device_type(request)
+        new_sources = ["upload"] if device_type == "mobile" else ["upload", "webcam"]
+        return new_sources, gr.update(sources=new_sources)
+    
+    sources = gr.State(value=["upload", "webcam"]) 
+    print(sources.value)
+
     with gr.Row():
         with gr.Column(scale=1):
-            image_input = gr.Image(sources=["upload", "webcam"], type="pil", height=500, width=750)
+            image_input = gr.Image(sources=sources.value, type="pil", height=500, width=750)
             capture_btn = gr.Button(value="Submit", min_width=700)
         with gr.Column(scale=1):
             gallery_output = gr.Gallery(label="Image & Captions Feed", columns=[3], rows=[1], object_fit="contain", height="auto", show_download_button=True)
@@ -96,6 +113,6 @@ with gr.Blocks(css=css) as demo:
         inputs=[gallery_state],
         outputs=[gallery_output]
     )
+    demo.load(fn=set_sources, inputs=[], outputs=[sources, image_input])
 
-# Launch the app
 demo.launch(server_name="0.0.0.0", server_port=7860)

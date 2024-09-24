@@ -2,3 +2,4 @@ gradio
 Pillow
 torch
 transformers
+user-agents
