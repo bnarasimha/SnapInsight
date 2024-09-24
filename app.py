@@ -59,7 +59,7 @@ def process_image(image, gallery_state):
 
 def load_initial_gallery():
     try:
-        with open("data.json", "r") as f:
+        with open(DATA_FILE, "r") as f:
             data = json.load(f)
             return [(os.path.join("saved_images", item["image"]), item["caption"]) for item in data]
     except (FileNotFoundError, json.JSONDecodeError):
@@ -85,10 +85,12 @@ with gr.Blocks(css=css) as demo:
     gr.Markdown("# Image Captioning Feed")
     gr.Markdown("Upload an image to generate a caption and add it to the feed.")
     
+    gallery_state = gr.State(load_initial_gallery())
+    
     def set_sources(request: gr.Request):
         device_type = get_device_type(request)
         new_sources = ["upload"] if device_type == "mobile" else ["upload", "webcam"]
-        return new_sources, gr.update(sources=new_sources)
+        return new_sources, gr.update(sources=new_sources), gr.update(value=load_initial_gallery())
     
     sources = gr.State(value=["upload", "webcam"]) 
     print(sources.value)
@@ -99,8 +101,6 @@ with gr.Blocks(css=css) as demo:
             capture_btn = gr.Button(value="Submit", min_width=700)
         with gr.Column(scale=1):
             gallery_output = gr.Gallery(label="Image & Captions Feed", columns=[3], rows=[1], object_fit="contain", height="auto", show_download_button=True)
-    
-    gallery_state = gr.State(load_initial_gallery())
     
     capture_btn.click(
         process_image,
@@ -113,6 +113,6 @@ with gr.Blocks(css=css) as demo:
         inputs=[gallery_state],
         outputs=[gallery_output]
     )
-    demo.load(fn=set_sources, inputs=[], outputs=[sources, image_input])
+    demo.load(fn=set_sources, inputs=[], outputs=[sources, image_input, gallery_output])
 
 demo.launch(server_name="0.0.0.0", server_port=7860)
