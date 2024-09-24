@@ -17,10 +17,12 @@ os.makedirs("saved_images", exist_ok=True)
 DATA_FILE = "image_data.json"
 
 def load_data():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    return []
+    try:
+        if os.path.exists(DATA_FILE):
+            with open(DATA_FILE, "r") as f:
+                return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return [] 
 
 def save_data(data):
     with open(DATA_FILE, "w") as f:
@@ -55,8 +57,12 @@ def process_image(image, gallery_state):
     return gallery_state, gallery_state
 
 def load_initial_gallery():
-    data = load_data()
-    return [(os.path.join("saved_images", item["image"]), item["caption"]) for item in data]
+    try:
+        with open("data.json", "r") as f:
+            data = json.load(f)
+            return [(os.path.join("saved_images", item["image"]), item["caption"]) for item in data]
+    except (FileNotFoundError, json.JSONDecodeError):
+        return [] 
 
 css = """
 h1 {
