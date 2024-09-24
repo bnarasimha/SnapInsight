@@ -66,17 +66,20 @@ h1 {
 """
 
 # Create Gradio interface
-with gr.Blocks(css=css) as iface:
+with gr.Blocks(css=css) as demo:
     gr.Markdown("# Image Captioning Feed")
     gr.Markdown("Upload an image to generate a caption and add it to the feed.")
     
     with gr.Row():
-        image_input = gr.Image(sources=["upload", "webcam"], type="pil", height=500, width=500)
-        gallery_output = gr.Gallery(label="Image Feed", columns=[3], rows=[1], object_fit="contain", height="auto", show_download_button="true")
+        with gr.Column(scale=1):
+            image_input = gr.Image(sources=["upload", "webcam"], type="pil", height=500, width=750)
+            capture_btn = gr.Button(value="Submit", min_width=700)
+        with gr.Column(scale=1):
+            gallery_output = gr.Gallery(label="Image & Captions Feed", columns=[3], rows=[1], object_fit="contain", height="auto", show_download_button=True)
     
     gallery_state = gr.State(load_initial_gallery())
     
-    image_input.change(
+    capture_btn.click(
         process_image,
         inputs=[image_input, gallery_state],
         outputs=[gallery_state, gallery_output]
@@ -89,4 +92,4 @@ with gr.Blocks(css=css) as iface:
     )
 
 # Launch the app
-iface.launch()
+demo.launch(server_name="0.0.0.0", server_port=7860)
