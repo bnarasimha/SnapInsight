@@ -23,7 +23,8 @@ def load_data():
             with open(DATA_FILE, "r") as f:
                 return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        return [] 
+        pass
+    return []  # Return an empty list if file doesn't exist or is empty
 
 def save_data(data):
     with open(DATA_FILE, "w") as f:
