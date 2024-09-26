@@ -52,7 +52,7 @@ This project is a web application that allows users to upload images, generate c
 4. Click the "Submit" button to generate a caption and add the image to the gallery.
 
 ### Method 2
-You can also run the application by executing run.sh file under scripts folder by providing just the droplet name and huggingface token  
+You can also run the application by executing run.sh file under scripts folder by providing just the droplet name, huggingface token and ssh fingerprint
 ```sh
 cd scripts  
 chmod +x run.sh
