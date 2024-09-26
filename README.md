@@ -39,6 +39,7 @@ This project is a web application that allows users to upload images, generate c
 
 ## Usage
 
+### Method 1
 1. Run the application:
     ```sh
     python app.py
@@ -49,6 +50,14 @@ This project is a web application that allows users to upload images, generate c
 3. Upload an image or capture one using your webcam (if on a laptop).
 
 4. Click the "Submit" button to generate a caption and add the image to the gallery.
+
+### Method 2
+You can also run the application by executing run.sh file under scripts folder by providing just the droplet name and huggingface token  
+```sh
+cd scripts  
+chmod +x run.sh
+./run.sh
+```
 
 ## File Structure
 
