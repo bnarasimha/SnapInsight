@@ -75,9 +75,32 @@ def get_device_type(request):
         return "laptop"
     
 css = """
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+}
 h1 {
     text-align: center;
-    display:block;
+    color: #FFFFFF;
+    margin-bottom: 20px;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.qr-code {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.qr-code img {
+    max-width: 400px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 """
 
@@ -103,6 +126,10 @@ with gr.Blocks(css=css) as demo:
         with gr.Column(scale=1):
             gallery_output = gr.Gallery(label="Image & Captions Feed", columns=[3], rows=[1], object_fit="contain", height="auto", show_download_button=True)
     
+    gr.Markdown("### Scan QR Code to open on your device")
+    with gr.Row(elem_classes="qr-code"):
+        qr_code = gr.Image(value="QRCode.png", label="QR Code", show_label=False)
+
     capture_btn.click(
         process_image,
         inputs=[image_input, gallery_state],
