@@ -128,7 +128,7 @@ with gr.Blocks(css=css) as demo:
     
     gr.Markdown("### Scan QR Code to open on your device")
     with gr.Row(elem_classes="qr-code"):
-        qr_code = gr.Image(value="QRCode.png", label="QR Code", show_label=False)
+        qr_code = gr.Image(value="App_QRCode.png", label="QR Code", show_label=False)
 
     capture_btn.click(
         process_image,
